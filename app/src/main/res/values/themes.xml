@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Sin action bar: la UI la compone Compose y ocupa toda la ventana. -->
+    <style name="Theme.Clinics" parent="android:Theme.Material.Light.NoActionBar" />
+</resources>
