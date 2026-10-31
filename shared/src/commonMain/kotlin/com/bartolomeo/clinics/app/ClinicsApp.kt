@@ -1,29 +1,34 @@
 package com.bartolomeo.clinics.app
 
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
+import androidx.navigation.compose.rememberNavController
+import com.bartolomeo.clinics.app.navigation.ClinicsNavGraph
+import com.bartolomeo.clinics.app.ui.theme.ClinicsTheme
 
 @Composable
-fun ClinicsApp() {
-    MaterialTheme {
-        Box(
-            modifier = Modifier.fillMaxSize().padding(24.dp),
-            contentAlignment = Alignment.Center,
-        ) {
-            Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                Text("Sistema de Clínicas", style = MaterialTheme.typography.headlineMedium)
-                Spacer(Modifier.height(8.dp))
-                Text(Greeting.hello(), style = MaterialTheme.typography.bodyLarge)
+fun ClinicsApp(
+    config: AppConfig,
+) {
+    ClinicsTheme {
+        val navController = rememberNavController()
+
+        // El Scaffold absorbe las insets de las barras del sistema: el ComposeView
+        // cubre toda la ventana, así que sin esto el contenido arranca en y=0.
+        Scaffold { padding ->
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(padding),
+            ) {
+                ClinicsNavGraph(
+                    navController = navController,
+                    config = config,
+                )
             }
         }
     }

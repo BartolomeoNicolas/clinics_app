@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Los dos backend solo sirven HTTP sobre la red local y no hay despliegue en
+  produccion, así que el trafico claro tiene que estar permitido para que la app
+  funcione (enunciado 9: proteger la comunicacion entre la interfaz y los
+  servicios). Si alguna vez hay HTTPS, esto se acota a los dominios concretos
+  con <domain-config> y base-config pasa a cleartextTrafficPermitted="false".
+-->
+<network-security-config>
+    <base-config cleartextTrafficPermitted="true">
+        <trust-anchors>
+            <certificates src="system" />
+        </trust-anchors>
+    </base-config>
+</network-security-config>

@@ -4,17 +4,38 @@ kotlin = "2.4.20"
 compose = "1.9.3"
 activityCompose = "1.11.0"
 
-# SDK: fijados por APP-M0-01 (§3.2)
+# No los fija el enunciado: son decisiones nuestras (PLAN.md: Ktor es el
+# estandar de KMP para HTTP).
+ktor = "3.6.1"
+coroutines = "1.11.0"
+kotlinxSerialization = "1.12.0"
+navigation = "2.10.0"
+
+# SDK: fijados por APP-M0-01 (enunciado 3.2)
 compileSdk = "37"
 minSdk = "24"
 targetSdk = "37"
 
+# Destinos: 10.0.2.2 es el alias del host tal como lo ve el emulador Android.
+# booking vive en 8082 y sync en 8081.
+bookingPort = "8082"
+syncPort = "8081"
+
 [libraries]
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activityCompose" }
+ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
+ktor-client-okhttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "ktor" }
+ktor-client-mock = { module = "io.ktor:ktor-client-mock", version.ref = "ktor" }
+ktor-client-content-negotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor" }
+ktor-serialization-kotlinx-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
+kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "coroutines" }
+kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerialization" }
+compose-navigation = { module = "org.jetbrains.androidx.navigation:navigation-compose", version.ref = "navigation" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 android-kotlin-multiplatform-library = { id = "com.android.kotlin.multiplatform.library", version.ref = "agp" }
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
+kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 compose-multiplatform = { id = "org.jetbrains.compose", version.ref = "compose" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
