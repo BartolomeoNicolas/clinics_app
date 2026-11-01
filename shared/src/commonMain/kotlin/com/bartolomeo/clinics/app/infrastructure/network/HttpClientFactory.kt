@@ -1,6 +1,6 @@
 package com.bartolomeo.clinics.app.infrastructure.network
 
-import com.bartolomeo.clinics.app.domain.port.SessionTokenProvider
+import com.bartolomeo.clinics.app.domain.ports.out.SessionTokenProvider
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.HttpClientEngine
 import io.ktor.client.plugins.HttpRequestRetry
@@ -8,7 +8,7 @@ import io.ktor.client.plugins.HttpTimeout
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.serialization.kotlinx.json.json
 
-fun createHttpClient(
+internal fun createHttpClient(
     engine: HttpClientEngine,
     tokenProvider: SessionTokenProvider,
 ): HttpClient = HttpClient(engine) {

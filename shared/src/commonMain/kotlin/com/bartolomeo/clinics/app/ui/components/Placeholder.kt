@@ -20,13 +20,14 @@ data class NavAction(
     val onClick: () -> Unit,
 )
 
-// Andamiaje de las pantallas todavía sin implementar: todas se ven igual para
-// que se distinga bien qué es contenido real y qué es marcador de posición.
+// Andamiaje de las pantallas todavia sin implementar: todas se ven igual para que se
+// distinga bien que es contenido real y que es marcador de posicion. El titulo es
+// opcional porque SearchScreen ya trae el suyo con la barra de sesion encima.
 @Composable
 fun Placeholder(
-    title: String,
     body: String,
     modifier: Modifier = Modifier,
+    title: String = "",
     actions: List<NavAction> = emptyList(),
 ) {
     Column(
@@ -37,17 +38,21 @@ fun Placeholder(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(12.dp, Alignment.CenterVertically),
     ) {
-        Text(
-            text = title,
-            style = MaterialTheme.typography.headlineSmall,
-            textAlign = TextAlign.Center,
-        )
+        if (title.isNotEmpty()) {
+            Text(
+                text = title,
+                style = MaterialTheme.typography.headlineSmall,
+                textAlign = TextAlign.Center,
+            )
+        }
+
         Text(
             text = body,
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             textAlign = TextAlign.Center,
         )
+
         actions.forEach { action ->
             OutlinedButton(onClick = action.onClick) {
                 Text(action.label)
