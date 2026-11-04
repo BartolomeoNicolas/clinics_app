@@ -1,12 +1,17 @@
 package com.bartolomeo.clinics.app.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.bartolomeo.clinics.app.AppConfig
+import com.bartolomeo.clinics.app.ui.auth.AuthEvent
+import com.bartolomeo.clinics.app.ui.auth.AuthViewModel
 import com.bartolomeo.clinics.app.ui.screens.AvailabilityScreen
 import com.bartolomeo.clinics.app.ui.screens.BookingResultScreen
 import com.bartolomeo.clinics.app.ui.screens.BookingWaitScreen
@@ -22,22 +27,63 @@ import com.bartolomeo.clinics.app.ui.screens.SyncStatusScreen
 fun ClinicsNavGraph(
     navController: NavHostController,
     config: AppConfig,
+    authViewModel: AuthViewModel,
+    startDestination: String,
 ) {
-    NavHost(navController = navController, startDestination = Routes.LOGIN) {
+    val authState by authViewModel.state.collectAsState()
+
+    // Los resultados del flujo de sesion viajan como eventos, no como estado: si
+    // fueran un flag, al girar el telefono dispararian la navegacion otra vez.
+    LaunchedEffect(Unit) {
+        authViewModel.events.collect { event ->
+            when (event) {
+                AuthEvent.LoggedIn -> navController.navigate(Routes.SEARCH) {
+                    popUpTo(Routes.LOGIN) { inclusive = true }
+                }
+
+                // El LOGIN ya esta abajo en el pila: volver es exactamente lo que hace
+                // popBackStack, y volver a navegar dejaria dos LOGIN seguidos.
+                AuthEvent.Registered -> navController.popBackStack()
+
+                // Se sale desde SEARCH, que es la raiz cuando se esta logueado.
+                AuthEvent.SessionClosed -> navController.navigate(Routes.LOGIN) {
+                    popUpTo(Routes.SEARCH) { inclusive = true }
+                }
+            }
+        }
+    }
+
+    NavHost(navController = navController, startDestination = startDestination) {
 
         composable(Routes.LOGIN) {
             LoginScreen(
-                onLogin = { navController.enterApp() },
-                onRegister = { navController.navigate(Routes.REGISTER) },
+                state = authState,
+                onLoginChange = authViewModel::onLoginChange,
+                onPasswordChange = authViewModel::onPasswordChange,
+                onSubmit = authViewModel::submitLogin,
+                onGoToRegister = { navController.navigate(Routes.REGISTER) },
             )
         }
 
         composable(Routes.REGISTER) {
-            RegisterScreen(onRegistered = { navController.enterApp() })
+            RegisterScreen(
+                state = authState,
+                onLoginChange = authViewModel::onRegisterLoginChange,
+                onPasswordChange = authViewModel::onRegisterPasswordChange,
+                onFirstNameChange = authViewModel::onFirstNameChange,
+                onLastNameChange = authViewModel::onLastNameChange,
+                onEmailChange = authViewModel::onEmailChange,
+                onImageUrlChange = authViewModel::onImageUrlChange,
+                onLangKeyChange = authViewModel::onLangKeyChange,
+                onSubmit = authViewModel::submitRegister,
+                onBack = { navController.popBackStack() },
+            )
         }
 
         composable(Routes.SEARCH) {
             SearchScreen(
+                onLogout = authViewModel::logout,
+                logoutError = authState.error,
                 onOpenProfessional = { navController.navigate(Routes.professional(it)) },
                 onSyncStatus = { navController.navigate(Routes.SYNC_STATUS) },
             )
@@ -126,13 +172,5 @@ fun ClinicsNavGraph(
                 onBack = { navController.popBackStack() },
             )
         }
-    }
-}
-
-// Al entrar, el login deja de estar detrás en el stack: el botón atrás no debe
-// devolver a un formulario ya resuelto.
-private fun NavHostController.enterApp() {
-    navigate(Routes.SEARCH) {
-        popUpTo(Routes.LOGIN) { inclusive = true }
     }
 }
