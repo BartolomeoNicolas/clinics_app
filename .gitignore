@@ -1,0 +1,24 @@
+# Gradle
+.gradle/
+build/
+!gradle/wrapper/gradle-wrapper.jar
+
+# Android
+local.properties
+.idea/
+*.iml
+captures/
+.externalNativeBuild/
+.cxx/
+.kotlin/
+
+# Salida de build
+*.apk
+*.aab
+*.ap_
+
+# Sistema
+.DS_Store
+
+# Heap dumps que deja el JVM si vuelve a haber OutOfMemoryError
+*.hprof
