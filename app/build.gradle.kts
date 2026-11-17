@@ -64,4 +64,7 @@ android {
 dependencies {
     implementation(project(":shared"))
     implementation(libs.androidx.activity.compose)
+    // viewModel { } se llama en MainActivity: sin esto el composition root no podria
+    // crear el ViewModel, y el de :shared lo trae con scope implementation.
+    implementation(libs.lifecycle.viewmodel.compose)
 }

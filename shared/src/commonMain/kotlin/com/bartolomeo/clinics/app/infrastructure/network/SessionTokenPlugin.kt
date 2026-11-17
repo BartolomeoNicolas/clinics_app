@@ -1,6 +1,6 @@
 package com.bartolomeo.clinics.app.infrastructure.network
 
-import com.bartolomeo.clinics.app.domain.port.SessionTokenProvider
+import com.bartolomeo.clinics.app.domain.ports.out.SessionTokenProvider
 import io.ktor.client.plugins.api.createClientPlugin
 import io.ktor.client.request.header
 import io.ktor.http.HttpHeaders
